@@ -39,6 +39,18 @@ def convert_to_number(df=None, col_names=[]):
         df[col] = pd.to_numeric(df[col])
     return df
 
+def convert_to_boolean(df=None, col_names=[]):
+    for col in col_names:
+        df[col] = df[col].astype(bool)
+    return df
+
+def convert_to_categorical(df=None):
+    for col in df.columns:
+        if df[col].dtype == 'object':
+            df[col] = df[col].astype('category')
+            df[col] = df[col].cat.codes
+    return df
+
 # preprocessing
 
 raw_df = convert_to_number(df=raw_df, col_names=['totals.bounces', 
@@ -46,4 +58,9 @@ raw_df = convert_to_number(df=raw_df, col_names=['totals.bounces',
                                                  'totals.newVisits',
                                                  'totals.pageviews',
                                                  'totals.transactionRevenue',
-                                                 'totals.visits'])
+                                                 'totals.visits',
+                                                 'trafficSource.adwordsClickInfo.page'])
+
+raw_df = convert_to_boolean(df=raw_df, col_names=['trafficSource.adwordsClickInfo.isVideoAd'])
+
+raw_df = convert_to_categorical(raw_df)
